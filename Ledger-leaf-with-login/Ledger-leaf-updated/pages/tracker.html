@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker — Ledger & Leaf</title>
+    <meta name="description" content="Log expenses, filter by category, and see your spending broken down by category and by day.">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <link rel="stylesheet" href="../css/tracker.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body data-page="tracker">
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+        <nav class="nav" aria-label="Main navigation">
+            <a href="../index.html" class="brand">
+                <span class="brand__mark" aria-hidden="true">₨</span>
+                Ledger &amp; Leaf
+            </a>
+            <button class="nav__toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav__links">
+                <li><a href="../index.html" data-page="home">Home</a></li>
+                <li><a href="about.html" data-page="about">About</a></li>
+                <li><a href="services.html" data-page="services">Services</a></li>
+                <li><a href="tracker.html" data-page="tracker">Tracker</a></li>
+                <li><a href="contact.html" data-page="contact">Contact</a></li>
+                <li><a href="login.html" class="nav__cta">Log in</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main">
+        <header class="page-header">
+            <div class="wrap">
+                <p class="breadcrumb"><a href="../index.html">Home</a> / Tracker</p>
+                <p class="eyebrow">Your ledger</p>
+                <h1>Log it, see it, understand it</h1>
+                <p>Everything you add below is saved in this browser, so your ledger will be here the next time you visit.</p>
+            </div>
+        </header>
+
+        <div class="wrap" style="padding-top: 40px;">
+
+            <section class="card stats-card full-width">
+                <h2 class="card__title">At a glance</h2>
+                <div class="stats">
+                    <div class="stats__item">
+                        <p class="stats__label">Total spent</p>
+                        <p class="stats__value" id="totalSpent">₨0.00</p>
+                    </div>
+                    <div class="stats__item">
+                        <p class="stats__label">Total expenses</p>
+                        <p class="stats__value" id="expenseCount">0</p>
+                    </div>
+                    <div class="stats__item">
+                        <p class="stats__label">Average expense</p>
+                        <p class="stats__value" id="avgExpense">₨0.00</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="tracker-grid mt-lg">
+
+                <section class="card" id="expenseForm-section">
+                    <h2 class="card__title">Add new expense</h2>
+                    <p>Required fields are marked with an asterisk (*).</p>
+                    <form id="expenseForm" class="form" novalidate>
+                        <div class="form__group">
+                            <label for="amount" class="form__label">Amount (₨) *</label>
+                            <input type="number" id="amount" class="form__input" min="0.01" step="0.01" placeholder="e.g. 450.00">
+                            <span class="form__error" id="amountError"></span>
+                        </div>
+                        <div class="form__group">
+                            <label for="category" class="form__label">Category *</label>
+                            <select id="category" class="form__select">
+                                <option value="">Select category</option>
+                                <option value="Food">🍔 Food</option>
+                                <option value="Transport">🚗 Transport</option>
+                                <option value="Entertainment">🎬 Entertainment</option>
+                                <option value="Utilities">💡 Utilities</option>
+                                <option value="Health">🏥 Health</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Other">📌 Other</option>
+                            </select>
+                            <span class="form__error" id="categoryError"></span>
+                        </div>
+                        <div class="form__group">
+                            <label for="description" class="form__label">Description (optional)</label>
+                            <textarea id="description" class="form__textarea" placeholder="What was this for?" maxlength="120"></textarea>
+                        </div>
+                        <div class="form__group">
+                            <label for="date" class="form__label">Date *</label>
+                            <input type="date" id="date" class="form__input">
+                            <span class="form__error" id="dateError"></span>
+                        </div>
+                        <div id="formStatus" class="form__status" role="alert"></div>
+                        <button type="submit" class="btn btn--primary btn--block">Add expense</button>
+                    </form>
+                </section>
+
+                <section class="card" id="filterSection">
+                    <h2 class="card__title">Filters</h2>
+                    <p>Narrow the table and totals down to a single category.</p>
+                    <div class="filter">
+                        <div class="form__group">
+                            <label for="categoryFilter" class="form__label">Filter by category</label>
+                            <select id="categoryFilter" class="form__select">
+                                <option value="">All categories</option>
+                                <option value="Food">🍔 Food</option>
+                                <option value="Transport">🚗 Transport</option>
+                                <option value="Entertainment">🎬 Entertainment</option>
+                                <option value="Utilities">💡 Utilities</option>
+                                <option value="Health">🏥 Health</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Other">📌 Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="divider-stamp">Tip</div>
+                    <p style="color: var(--ink-soft); font-size: 0.88rem;">Filtering only changes what you see here — every chart and the table below update instantly, but nothing is deleted.</p>
+                </section>
+            </div>
+
+            <section class="card full-width mt-lg" id="expensesSection">
+                <h2 class="card__title">Recent expenses</h2>
+                <div id="expensesContainer" class="expenses-container">
+                    <div class="empty-state">No expenses added yet. Start by adding your first expense above.</div>
+                </div>
+            </section>
+
+            <div class="tracker-grid tracker-grid--charts" id="chartsSection">
+                <section class="card chart-card">
+                    <h2 class="card__title">Spending by category</h2>
+                    <div class="chart">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </section>
+
+                <section class="card chart-card">
+                    <h2 class="card__title">Recent trends (7 days)</h2>
+                    <div class="chart">
+                        <canvas id="trendsChart"></canvas>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <p class="footer-brand">Ledger &amp; Leaf</p>
+                <p class="footer-tag">A quiet, paper-inspired way to keep track of your everyday spending.</p>
+            </div>
+            <div>
+                <p class="footer-heading">Site</p>
+                <ul class="footer-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="services.html">Services</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="footer-heading">Tools</p>
+                <ul class="footer-links">
+                    <li><a href="tracker.html">Expense Tracker</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="footer-heading">Made by</p>
+                <ul class="footer-links">
+                    <li>Faraz Ahmad</li>
+                    <li>ID: 70177298</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="footerYear">2026</span> Ledger &amp; Leaf. All rights reserved.</p>
+            <p>Built for learning purposes.</p>
+        </div>
+    </footer>
+
+    <script src="../js/shared.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>document.addEventListener("DOMContentLoaded", function() { window.Auth.requireAuth(); });</script>
+    <script src="../js/tracker.js"></script>
+</body>
+</html>

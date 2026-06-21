@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in — Ledger &amp; Leaf</title>
+    <meta name="description" content="Log in or create your Ledger & Leaf account to start tracking your expenses.">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <style>
+        /* ── Auth page layout ── */
+        .auth-wrap {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+        }
+
+        .auth-box {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--ledger-green);
+            margin-bottom: 28px;
+        }
+
+        .auth-logo__mark {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--ledger-green);
+            color: var(--paper);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        /* ── Tab switcher ── */
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border: 2px solid var(--line);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 28px;
+        }
+
+        .auth-tab {
+            padding: 12px;
+            border: none;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--ink-soft);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .auth-tab.is-active {
+            background: var(--ledger-green);
+            color: var(--paper);
+        }
+
+        /* ── Card ── */
+        .auth-card {
+            background: var(--paper-card);
+            border: 1px solid var(--line-soft);
+            border-radius: var(--radius-lg);
+            padding: 36px 32px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .auth-card__heading {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        .auth-card__sub {
+            color: var(--ink-soft);
+            font-size: 0.92rem;
+            margin-bottom: 24px;
+        }
+
+        /* ── Panel visibility ── */
+        .auth-panel { display: none; }
+        .auth-panel.is-active { display: block; }
+
+        /* ── Divider ── */
+        .auth-divider {
+            text-align: center;
+            margin: 20px 0 16px;
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+            position: relative;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: calc(50% - 24px);
+            height: 1px;
+            background: var(--line);
+        }
+
+        .auth-divider::before { left: 0; }
+        .auth-divider::after { right: 0; }
+
+        /* ── Footer note ── */
+        .auth-footnote {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+        }
+
+        .auth-footnote a {
+            color: var(--ledger-green);
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        /* ── Password toggle ── */
+        .form__group--pw {
+            position: relative;
+        }
+
+        .pw-toggle {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 2px;
+            color: var(--ink-soft);
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .pw-toggle:focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+
+        /* ── Alert ── */
+        .auth-alert {
+            display: none;
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .auth-alert.is-visible { display: block; }
+
+        .auth-alert--error {
+            background: var(--rust-soft);
+            color: var(--rust);
+            border: 1px solid var(--rust);
+        }
+
+        .auth-alert--success {
+            background: #E4F0E6;
+            color: var(--ledger-green);
+            border: 1px solid var(--sage);
+        }
+
+        /* ── Privacy note ── */
+        .privacy-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            background: var(--gold-soft);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            font-size: 0.78rem;
+            color: var(--ink-soft);
+            margin-top: 20px;
+        }
+
+        .privacy-note__icon { font-size: 1rem; flex-shrink: 0; }
+    </style>
+</head>
+<body data-page="login">
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+        <nav class="nav" aria-label="Main navigation">
+            <a href="../index.html" class="brand">
+                <span class="brand__mark" aria-hidden="true">₨</span>
+                Ledger &amp; Leaf
+            </a>
+            <button class="nav__toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav__links">
+                <li><a href="../index.html" data-page="home">Home</a></li>
+                <li><a href="about.html" data-page="about">About</a></li>
+                <li><a href="services.html" data-page="services">Services</a></li>
+                <li><a href="tracker.html" data-page="tracker">Tracker</a></li>
+                <li><a href="contact.html" data-page="contact">Contact</a></li>
+                <li><a href="login.html" class="nav__cta is-active">Log in</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main">
+        <div class="auth-wrap">
+            <div class="auth-box">
+
+                <!-- Logo -->
+                <div class="auth-logo">
+                    <div class="auth-logo__mark">₨</div>
+                    Ledger &amp; Leaf
+                </div>
+
+                <!-- Tab switcher -->
+                <div class="auth-tabs" role="tablist" aria-label="Authentication options">
+                    <button class="auth-tab is-active" id="tab-login" role="tab"
+                        aria-selected="true" aria-controls="panel-login">Log in</button>
+                    <button class="auth-tab" id="tab-signup" role="tab"
+                        aria-selected="false" aria-controls="panel-signup">Create account</button>
+                </div>
+
+                <!-- ═══════════ LOGIN PANEL ═══════════ -->
+                <div class="auth-card auth-panel is-active" id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+                    <h1 class="auth-card__heading">Welcome back</h1>
+                    <p class="auth-card__sub">Log in to access your ledger.</p>
+
+                    <div class="auth-alert auth-alert--error" id="loginError" role="alert"></div>
+
+                    <div class="form" id="loginForm">
+                        <div class="form__group">
+                            <label class="form__label" for="loginEmail">Email address</label>
+                            <input class="form__input" type="email" id="loginEmail"
+                                   placeholder="you@example.com" autocomplete="email" required>
+                            <span class="form__error" id="loginEmailErr"></span>
+                        </div>
+
+                        <div class="form__group form__group--pw">
+                            <label class="form__label" for="loginPassword">Password</label>
+                            <input class="form__input" type="password" id="loginPassword"
+                                   placeholder="••••••••" autocomplete="current-password" required>
+                            <button type="button" class="pw-toggle" aria-label="Show/hide password"
+                                    data-target="loginPassword">👁</button>
+                            <span class="form__error" id="loginPasswordErr"></span>
+                        </div>
+
+                        <button type="button" class="btn btn--primary btn--block" id="loginSubmit">
+                            Log in
+                        </button>
+                    </div>
+
+                    <div class="auth-divider">or</div>
+
+                    <p class="auth-footnote">
+                        No account yet?
+                        <a href="#" id="goToSignup">Create one — it's free</a>
+                    </p>
+
+                    <div class="privacy-note">
+                        <span class="privacy-note__icon">🔒</span>
+                        Your data never leaves this device. We store everything in your browser's local storage.
+                    </div>
+                </div>
+
+                <!-- ═══════════ SIGNUP PANEL ═══════════ -->
+                <div class="auth-card auth-panel" id="panel-signup" role="tabpanel" aria-labelledby="tab-signup">
+                    <h1 class="auth-card__heading">Create your account</h1>
+                    <p class="auth-card__sub">Start tracking your expenses in seconds.</p>
+
+                    <div class="auth-alert auth-alert--error" id="signupError" role="alert"></div>
+                    <div class="auth-alert auth-alert--success" id="signupSuccess" role="status"></div>
+
+                    <div class="form" id="signupForm">
+                        <div class="form__group">
+                            <label class="form__label" for="signupName">Full name</label>
+                            <input class="form__input" type="text" id="signupName"
+                                   placeholder="e.g. Faraz Ahmad" autocomplete="name" required>
+                            <span class="form__error" id="signupNameErr"></span>
+                        </div>
+
+                        <div class="form__group">
+                            <label class="form__label" for="signupEmail">Email address</label>
+                            <input class="form__input" type="email" id="signupEmail"
+                                   placeholder="you@example.com" autocomplete="email" required>
+                            <span class="form__error" id="signupEmailErr"></span>
+                        </div>
+
+                        <div class="form__group form__group--pw">
+                            <label class="form__label" for="signupPassword">Password</label>
+                            <input class="form__input" type="password" id="signupPassword"
+                                   placeholder="At least 6 characters" autocomplete="new-password" required>
+                            <button type="button" class="pw-toggle" aria-label="Show/hide password"
+                                    data-target="signupPassword">👁</button>
+                            <span class="form__error" id="signupPasswordErr"></span>
+                        </div>
+
+                        <div class="form__group form__group--pw">
+                            <label class="form__label" for="signupConfirm">Confirm password</label>
+                            <input class="form__input" type="password" id="signupConfirm"
+                                   placeholder="Repeat your password" autocomplete="new-password" required>
+                            <button type="button" class="pw-toggle" aria-label="Show/hide confirm password"
+                                    data-target="signupConfirm">👁</button>
+                            <span class="form__error" id="signupConfirmErr"></span>
+                        </div>
+
+                        <button type="button" class="btn btn--primary btn--block" id="signupSubmit">
+                            Create account
+                        </button>
+                    </div>
+
+                    <div class="auth-divider">or</div>
+
+                    <p class="auth-footnote">
+                        Already have an account?
+                        <a href="#" id="goToLogin">Log in instead</a>
+                    </p>
+
+                    <div class="privacy-note">
+                        <span class="privacy-note__icon">🔒</span>
+                        Everything is stored locally in your browser. No servers, no sign-up emails.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ── FOOTER ── -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <p class="footer-brand">Ledger &amp; Leaf</p>
+                <p class="footer-tag">A quiet, paper-inspired way to keep track of your everyday spending.</p>
+            </div>
+            <div>
+                <p class="footer-heading">Site</p>
+                <ul class="footer-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="services.html">Services</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="footer-heading">Tools</p>
+                <ul class="footer-links">
+                    <li><a href="tracker.html">Expense Tracker</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="footer-heading">Made by</p>
+                <ul class="footer-links">
+                    <li>Faraz Ahmad</li>
+                    <li>ID: 70177298</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="footerYear">2026</span> Ledger &amp; Leaf. All rights reserved.</p>
+            <p>Built for learning purposes.</p>
+        </div>
+    </footer>
+
+    <script src="../js/shared.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+    (function () {
+        'use strict';
+
+        /* Redirect if already logged in */
+        if (window.Auth.currentUser()) {
+            window.location.href = 'tracker.html';
+        }
+
+        /* ── Tab switching ── */
+        var tabLogin  = document.getElementById('tab-login');
+        var tabSignup = document.getElementById('tab-signup');
+        var panelLogin  = document.getElementById('panel-login');
+        var panelSignup = document.getElementById('panel-signup');
+
+        function showPanel(which) {
+            var isLogin = which === 'login';
+            tabLogin.classList.toggle('is-active', isLogin);
+            tabSignup.classList.toggle('is-active', !isLogin);
+            tabLogin.setAttribute('aria-selected', String(isLogin));
+            tabSignup.setAttribute('aria-selected', String(!isLogin));
+            panelLogin.classList.toggle('is-active', isLogin);
+            panelSignup.classList.toggle('is-active', !isLogin);
+            clearAlerts();
+        }
+
+        tabLogin.addEventListener('click', function () { showPanel('login'); });
+        tabSignup.addEventListener('click', function () { showPanel('signup'); });
+        document.getElementById('goToSignup').addEventListener('click', function (e) { e.preventDefault(); showPanel('signup'); });
+        document.getElementById('goToLogin').addEventListener('click', function (e) { e.preventDefault(); showPanel('login'); });
+
+        /* ── Password toggles ── */
+        document.querySelectorAll('.pw-toggle').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var input = document.getElementById(btn.getAttribute('data-target'));
+                if (!input) return;
+                var show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                btn.textContent = show ? '🙈' : '👁';
+                btn.setAttribute('aria-label', (show ? 'Hide' : 'Show') + ' password');
+            });
+        });
+
+        /* ── Alert helpers ── */
+        function clearAlerts() {
+            ['loginError','signupError','signupSuccess'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) { el.classList.remove('is-visible'); el.textContent = ''; }
+            });
+            document.querySelectorAll('.form__input').forEach(function (el) { el.classList.remove('is-invalid'); });
+            document.querySelectorAll('.form__error').forEach(function (el) { el.textContent = ''; });
+        }
+
+        function showAlert(id, msg) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = msg;
+            el.classList.add('is-visible');
+        }
+
+        function fieldError(inputId, errId, msg) {
+            var input = document.getElementById(inputId);
+            var errEl = document.getElementById(errId);
+            if (input) input.classList.add('is-invalid');
+            if (errEl) errEl.textContent = msg;
+        }
+
+        /* ── Login ── */
+        document.getElementById('loginSubmit').addEventListener('click', function () {
+            clearAlerts();
+            var email = document.getElementById('loginEmail').value.trim();
+            var password = document.getElementById('loginPassword').value;
+            var valid = true;
+
+            if (!email) { fieldError('loginEmail', 'loginEmailErr', 'Please enter your email.'); valid = false; }
+            if (!password) { fieldError('loginPassword', 'loginPasswordErr', 'Please enter your password.'); valid = false; }
+            if (!valid) return;
+
+            var result = window.Auth.login(email, password);
+            if (result.ok) {
+                window.location.href = 'tracker.html';
+            } else {
+                showAlert('loginError', result.message);
+            }
+        });
+
+        /* Allow Enter key on login fields */
+        ['loginEmail','loginPassword'].forEach(function (id) {
+            document.getElementById(id).addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') document.getElementById('loginSubmit').click();
+            });
+        });
+
+        /* ── Sign up ── */
+        document.getElementById('signupSubmit').addEventListener('click', function () {
+            clearAlerts();
+            var name     = document.getElementById('signupName').value.trim();
+            var email    = document.getElementById('signupEmail').value.trim();
+            var password = document.getElementById('signupPassword').value;
+            var confirm  = document.getElementById('signupConfirm').value;
+            var valid = true;
+
+            if (!name)    { fieldError('signupName',     'signupNameErr',     'Please enter your name.'); valid = false; }
+            if (!email)   { fieldError('signupEmail',    'signupEmailErr',    'Please enter your email.'); valid = false; }
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                fieldError('signupEmail', 'signupEmailErr', 'Please enter a valid email address.');
+                valid = false;
+            }
+            if (!password || password.length < 6) {
+                fieldError('signupPassword', 'signupPasswordErr', 'Password must be at least 6 characters.');
+                valid = false;
+            }
+            if (password && confirm !== password) {
+                fieldError('signupConfirm', 'signupConfirmErr', 'Passwords do not match.');
+                valid = false;
+            }
+            if (!valid) return;
+
+            var result = window.Auth.register(name, email, password);
+            if (result.ok) {
+                showAlert('signupSuccess', '✅ Account created! Redirecting you to the tracker…');
+                document.getElementById('signupForm').style.display = 'none';
+                setTimeout(function () { window.location.href = 'tracker.html'; }, 1400);
+            } else {
+                showAlert('signupError', result.message);
+            }
+        });
+
+        /* Allow Enter key on signup fields */
+        ['signupName','signupEmail','signupPassword','signupConfirm'].forEach(function (id) {
+            document.getElementById(id).addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') document.getElementById('signupSubmit').click();
+            });
+        });
+
+        /* Check URL for ?tab=signup */
+        if (new URLSearchParams(window.location.search).get('tab') === 'signup') {
+            showPanel('signup');
+        }
+    })();
+    </script>
+</body>
+</html>

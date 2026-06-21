@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — Ledger & Leaf</title>
+    <meta name="description" content="Get in touch with the Ledger & Leaf team with questions, feedback, or feature requests.">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body data-page="contact">
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+        <nav class="nav" aria-label="Main navigation">
+            <a href="../index.html" class="brand">
+                <span class="brand__mark" aria-hidden="true">₨</span>
+                Ledger &amp; Leaf
+            </a>
+            <button class="nav__toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav__links">
+                <li><a href="../index.html" data-page="home">Home</a></li>
+                <li><a href="about.html" data-page="about">About</a></li>
+                <li><a href="services.html" data-page="services">Services</a></li>
+                <li><a href="tracker.html" data-page="tracker">Tracker</a></li>
+                <li><a href="contact.html" data-page="contact">Contact</a></li>
+                <li><a href="login.html" class="nav__cta">Log in</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main">
+        <header class="page-header">
+            <div class="wrap">
+                <p class="breadcrumb"><a href="../index.html">Home</a> / Contact</p>
+                <p class="eyebrow">Get in touch</p>
+                <h1>Questions, feedback, or a feature idea?</h1>
+                <p>We read every message ourselves. Tell us what's working, what isn't, or what you'd like the ledger to do next.</p>
+            </div>
+        </header>
+
+        <section class="section">
+            <div class="wrap contact-grid">
+
+                <div>
+                    <p class="eyebrow">Reach us</p>
+                    <h2>A few ways to find us</h2>
+                    <div class="contact-info-list">
+                        <div class="contact-info-item">
+                            <div class="contact-info-item__icon" aria-hidden="true">✉️</div>
+                            <div>
+                                <h4>Email</h4>
+                                <p>support@ledgerandleaf.example</p>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-item__icon" aria-hidden="true">📞</div>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>+92 326 9623560</p>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-item__icon" aria-hidden="true">📍</div>
+                            <div>
+                                <h4>Office</h4>
+                                <p>River View, Lahore, Punjab, Pakistan</p>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-item__icon" aria-hidden="true">🕘</div>
+                            <div>
+                                <h4>Hours</h4>
+                                <p>Monday – Friday, 9:00 AM – 6:00 PM PKT</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="map-frame" role="img" aria-label="Stylised map marking our office in Gulberg III, Lahore">
+                        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                            <rect width="400" height="220" fill="#FAF6ED"/>
+                            <g stroke="#D8D0BD" stroke-width="1">
+                                <line x1="0" y1="40" x2="400" y2="40"/>
+                                <line x1="0" y1="90" x2="400" y2="90"/>
+                                <line x1="0" y1="150" x2="400" y2="150"/>
+                                <line x1="70" y1="0" x2="70" y2="220"/>
+                                <line x1="190" y1="0" x2="190" y2="220"/>
+                                <line x1="300" y1="0" x2="300" y2="220"/>
+                            </g>
+                            <path d="M0 110 H400" stroke="#C9A227" stroke-width="3" opacity="0.5"/>
+                            <path d="M190 0 V220" stroke="#C9A227" stroke-width="3" opacity="0.5"/>
+                            <g transform="translate(190,110)">
+                                <circle r="9" fill="#B5524A" stroke="#FFFFFF" stroke-width="2"/>
+                                <text x="14" y="5" font-family="monospace" font-size="12" fill="#1A1A1A" font-weight="700">River View, Lahore</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card__title">Send a message</h2>
+                    <p>Fields marked with an asterisk (*) are required.</p>
+
+                    <div id="formStatus" class="form__status" role="alert"></div>
+
+                    <form id="contactForm" class="form" novalidate>
+                        <div class="form__row">
+                            <div class="form__group">
+                                <label for="fullName" class="form__label">Full name *</label>
+                                <input type="text" id="fullName" class="form__input" placeholder="Your full name" autocomplete="name">
+                                <span class="form__error" id="fullNameError"></span>
+                            </div>
+                            <div class="form__group">
+                                <label for="email" class="form__label">Email address *</label>
+                                <input type="email" id="email" class="form__input" placeholder="you@example.com" autocomplete="email">
+                                <span class="form__error" id="emailError"></span>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__group">
+                                <label for="phone" class="form__label">Phone (optional)</label>
+                                <input type="tel" id="phone" class="form__input" placeholder="03XX XXXXXXX" autocomplete="tel">
+                                <span class="form__error" id="phoneError"></span>
+                            </div>
+                            <div class="form__group">
+                                <label for="topic" class="form__label">Topic *</label>
+                                <select id="topic" class="form__select">
+                                    <option value="">Select a topic</option>
+                                    <option value="Bug Report">Bug report</option>
+                                    <option value="Feature Request">Feature request</option>
+                                    <option value="General Question">General question</option>
+                                    <option value="Partnership">Partnership</option>
+                                </select>
+                                <span class="form__error" id="topicError"></span>
+                            </div>
+                        </div>
+
+                        <div class="form__group">
+                            <label for="message" class="form__label">Message *</label>
+                            <textarea id="message" class="form__textarea" placeholder="Tell us what's on your mind..." maxlength="500"></textarea>
+                            <div class="char-count"><span id="charCount">0</span>/500</div>
+                            <span class="form__error" id="messageError"></span>
+                        </div>
+
+                        <div class="form__group">
+                            <label style="display:flex; align-items:flex-start; gap:8px; font-size:0.85rem; color:var(--ink-soft); font-weight:400;">
+                                <input type="checkbox" id="consent" style="margin-top:3px;">
+                                I agree to be contacted about this message. *
+                            </label>
+                            <span class="form__error" id="consentError"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn--primary btn--block">Send message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div>
+                <p class="footer-brand">Ledger &amp; Leaf</p>
+                <p class="footer-tag">A quiet, paper-inspired way to keep track of your everyday spending.</p>
+            </div>
+            <div>
+                <p class="footer-heading">Site</p>
+                <ul class="footer-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="services.html">Services</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="footer-heading">Tools</p>
+                <ul class="footer-links">
+                    <li><a href="tracker.html">Expense Tracker</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="footer-heading">Made by</p>
+                <ul class="footer-links">
+                    <li>Faraz Ahmad</li>
+                    <li>ID: 70177298</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="footerYear">2026</span> Ledger &amp; Leaf. All rights reserved.</p>
+            <p>Built for learning purposes.</p>
+        </div>
+    </footer>
+
+    <script src="../js/shared.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/contact.js"></script>
+</body>
+</html>

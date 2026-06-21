@@ -1,0 +1,122 @@
+
+
+.tracker-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+    min-width: 0;
+}
+
+.tracker-grid > * {
+    min-width: 0;
+}
+
+.tracker-grid--charts {
+    margin-top: 40px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+    min-width: 0;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    min-width: 0;
+}
+
+.stats__item {
+    background: var(--ledger-green);
+    background-image: radial-gradient(circle at 1px 1px, rgba(250,246,237,0.08) 1px, transparent 0);
+    background-size: 16px 16px;
+    color: var(--paper);
+    padding: 22px 18px;
+    border-radius: var(--radius-md);
+    text-align: center;
+    min-width: 0;
+}
+
+.stats__item:nth-child(2) { background-color: var(--ledger-green-light); }
+.stats__item:nth-child(3) { background-color: #8a6d12; }
+
+.stats__label {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stats__value {
+    font-family: var(--font-mono);
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
+.stats-card { margin-bottom: 8px; }
+
+.expenses-container { overflow-x: auto; }
+
+.expenses-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.expenses-table thead { background: var(--line-soft); }
+
+.expenses-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: 2px solid var(--line);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.expenses-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--line-soft);
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+}
+
+.expenses-table tbody tr:hover { background: var(--paper); }
+
+.expenses-table .amount {
+    color: var(--rust);
+    font-weight: 700;
+}
+
+.empty-state, .no-data {
+    text-align: center;
+    color: var(--ink-soft);
+    padding: 48px 20px;
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+.chart-card { margin-top: 0; }
+
+.chart {
+    position: relative;
+    height: 280px;
+    margin-top: 16px;
+}
+
+@media (max-width: 860px) {
+    .tracker-grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    .expenses-table { font-size: 0.78rem; }
+    .expenses-table th, .expenses-table td { padding: 8px 6px; }
+    .chart { height: 230px; }
+}
